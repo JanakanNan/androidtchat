@@ -16,14 +16,14 @@
         android:minHeight="?android:attr/actionBarSize">
     </android.support.v7.widget.Toolbar>
 
-    <android.support.v7.app.AlertController.RecycleListView
+    <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler"
         android:layout_below="@+id/toolbar"
         android:layout_above="@+id/llAction"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-    </android.support.v7.app.AlertController.RecycleListView>
+    </android.support.v7.widget.RecyclerView>
 
     <LinearLayout
         android:id="@+id/llAction"
@@ -50,6 +50,7 @@
                 android:layout_height="wrap_content" />
 
             <EditText
+                android:id="@+id/etMessage"
                 android:layout_width="0dp"
                 android:hint="Message"
                 android:imeOptions="actionDone"

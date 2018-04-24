@@ -1,10 +1,12 @@
 package com.example.janakannandakumaran.tchat;
 
+import android.content.ClipData;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
@@ -16,6 +18,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.support.v7.widget.Toolbar;
 
+import com.example.janakannandakumaran.tchat.Adapters.TchatAdapter;
 import com.example.janakannandakumaran.tchat.Entities.Message;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -25,22 +28,28 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.ArrayList;
+
 public class TchatActivity extends AppCompatActivity {
 
     private EditText etMessage;
     private ImageButton sendButton;
     private RecyclerView recycler;
+    private Button logout;
 
     private FirebaseAuth mAuth;
     private FirebaseDatabase mDatabase;
     private DatabaseReference mRef;
+
     private FirebaseAuth.AuthStateListener authStateListener;
     private ChildEventListener childEventListener;
 
-    private String username;
-    private String userId;
+
+    private TchatAdapter adapter;
 
     private SharedPreferences prefs;
+    private String username;
+    private String userId;
 
     private static final String TAG = "TCHAT";
 
@@ -64,6 +73,7 @@ public class TchatActivity extends AppCompatActivity {
         authStateListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+
                 FirebaseUser user = firebaseAuth.getCurrentUser();
 
                 if(user != null)
@@ -71,6 +81,7 @@ public class TchatActivity extends AppCompatActivity {
                     attachChildListener();
                     username = prefs.getString("PSEUDO",null);
                     userId = user.getUid();
+                    adapter.setUser(user);
 
                 }else {
                     startActivity(new Intent(getApplicationContext(), LoginActivity.class));
@@ -87,6 +98,10 @@ public class TchatActivity extends AppCompatActivity {
                 @Override
                 public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                     Log.w(TAG, "onChildAdded :");
+                    Message message = dataSnapshot.getValue(Message.class);
+                    message.setUid(dataSnapshot.getKey());
+                    adapter.addMessage(message);
+                    recycler.scrollToPosition(adapter.getItemCount() - 1);
 
                 }
 
@@ -128,6 +143,16 @@ public class TchatActivity extends AppCompatActivity {
         sendButton =  (ImageButton) findViewById(R.id.sendButton);
         recycler = (RecyclerView) findViewById(R.id.recycler);
 
+        LinearLayoutManager manager = new LinearLayoutManager(this);
+        manager.setStackFromEnd(true);
+        recycler.setLayoutManager(manager);
+
+
+        ArrayList<Message> messages = new ArrayList<>();
+        adapter = new TchatAdapter(messages);
+        recycler.setAdapter(adapter);
+
+
         sendButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
@@ -138,9 +163,10 @@ public class TchatActivity extends AppCompatActivity {
 
     private void sendMessage() {
         String content = etMessage.getText().toString();
+
         if (!TextUtils.isEmpty(content))
         {
-            Message message = new Message(username, userId, content, null);
+            Message message = new Message("Jordan", "DAVtbHpBfIW1gH2JxHA3Jn1mjgX2", content, null);
             mRef.child(Constants.MESSAGE_DB).push().setValue(message);
             etMessage.setText(" ");
         }
@@ -161,11 +187,11 @@ public class TchatActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.logout)
-        {
-
-        }
-        return super.onOptionsItemSelected(item);
+        userId = "";
+        username = "";
+        startActivity(new Intent(getApplicationContext(), LoginActivity.class));
+        finish();
+        return true;
     }
 
     @Override

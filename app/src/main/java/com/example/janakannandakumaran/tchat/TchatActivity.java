@@ -189,6 +189,7 @@ public class TchatActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         userId = "";
         username = "";
+        LoginActivity user = new LoginActivity();
         startActivity(new Intent(getApplicationContext(), LoginActivity.class));
         finish();
         return true;

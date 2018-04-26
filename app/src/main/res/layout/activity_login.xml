@@ -17,35 +17,39 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
+            android:text="Tchat"
             android:textSize="23sp"
-            android:textStyle="bold"
-            android:text="Tchat" />
+            android:textStyle="bold" />
 
-        <EditText
-            android:id="@+id/etPseudo"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="24dp"
-            android:hint="pseudo"
-            android:inputType="textPersonName"
+        <TextView
+            android:id="@+id/TextTest"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
+
+        <com.google.android.gms.common.SignInButton
+            android:id="@+id/sign_in_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="24dp">
+
+        </com.google.android.gms.common.SignInButton>
 
         <Button
-            android:id="@+id/btnLogin"
-            android:layout_gravity="center_horizontal"
-            android:text="Connexion"
-            android:layout_marginTop="24dp"
-            style="@style/Widget.AppCompat.Button.Colored"
+            android:id="@+id/logoutBtn"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="24dp"
+            android:text="Déconnexion"/>
 
         <ProgressBar
             android:id="@+id/loader"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="24dp"
-            android:visibility="invisible"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:visibility="invisible" />
     </LinearLayout>
 
 
